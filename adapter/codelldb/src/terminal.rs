@@ -98,8 +98,16 @@ impl Terminal {
     pub fn attach_console(&self) {
         unsafe {
             let pid = self.data.parse::<u32>().unwrap();
-            dbg!(winapi::um::wincon::FreeConsole());
-            dbg!(winapi::um::wincon::AttachConsole(pid));
+            let rs_code = winapi::um::wincon::FreeConsole();
+            if rs_code == 0 {
+                let error_code = winapi::um::errhandlingapi::GetLastError();
+                error!("FreeConsole failed with error code: {}", error_code);
+            }
+            let rs_code = winapi::um::wincon::AttachConsole(pid);
+            if rs_code == 0 {
+                let error_code = winapi::um::errhandlingapi::GetLastError();
+                error!("AttachConsole failed with error code: {}", error_code);
+            }
         }
     }
 

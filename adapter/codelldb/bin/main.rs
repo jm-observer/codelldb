@@ -1,11 +1,16 @@
 use clap::{App, Arg, SubCommand};
+use log::{debug, error, info};
+use log::LevelFilter::Debug;
 
 type Error = Box<dyn std::error::Error>;
 
 mod terminal_agent;
 
 fn main() -> Result<(), Error> {
-    env_logger::Builder::from_default_env().init();
+    // env_logger::Builder::from_default_env().init();
+    let _ = custom_utils::logger::logger_feature_with_path("codelldb-lapce", Debug, Debug, "C:\\Users\\36225\\etc".into(), true, "C:\\Users\\36225\\log".into()).build();
+
+
 
     let matches = App::new("codelldb")
         .arg(Arg::with_name("preload").long("preload").multiple(true).takes_value(true))
@@ -19,9 +24,16 @@ fn main() -> Result<(), Error> {
             SubCommand::with_name("terminal-agent").arg(Arg::with_name("connect").long("connect").takes_value(true)),
         )
         .get_matches();
-
+    info!("start codelldb {:?}", matches);
     if let Some(matches) = matches.subcommand_matches("terminal-agent") {
-        terminal_agent::terminal_agent(&matches)
+        let rs = terminal_agent::terminal_agent(&matches);
+
+        if let Err(e) = &rs {
+            error!("terminal-agent: {:?}", e);
+        } else {
+            debug!("terminal-agent end");
+        }
+        rs
     } else {
         #[cfg(feature = "weaklink")]
         {

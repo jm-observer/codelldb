@@ -94,6 +94,7 @@ pub fn initialize(
     let command = format!("command script import '{}'", init_script.to_str().unwrap());
     interpreter.handle_command(&command, &mut command_result, false);
     if !command_result.succeeded() {
+        error!("scripts/debugger.py from {:?}", init_script);
         bail!(format!("{:?}", command_result));
     }
     let (sender, receiver) = mpsc::channel(10);

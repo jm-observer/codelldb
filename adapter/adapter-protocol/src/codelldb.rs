@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types)]
 
 use crate::vec_map::VecMap;
-use serde_derive::*;
+use serde::*;
 
 pub use crate::dap::{
     Breakpoint, BreakpointEventBody, CancelArguments, Capabilities, CapabilitiesEventBody, CompletionItem,

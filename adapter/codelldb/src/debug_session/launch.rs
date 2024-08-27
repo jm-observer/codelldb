@@ -39,13 +39,22 @@ impl super::DebugSession {
             let fut = async move {
                 term_fut.await;
                 log_errors!(config_done_recv.recv().await);
-                self_ref.map(|s| s.complete_launch(args)).await
+                self_ref.map(|s| {
+                    let rs = s.complete_launch(args);
+                    if let Err(e) = &rs {
+                        error!("complete_launch error: {:?}", e);
+                    } else {
+                        info!("complete_launch ok");
+                    }
+                    rs
+                }).await
             };
             Err(AsyncResponse(Box::new(fut)).into())
         }
     }
 
     fn complete_launch(&mut self, args: LaunchRequestArguments) -> Result<ResponseBody, Error> {
+        debug!("complete_launch {:?}", args);
         let mut launch_info = self.target.launch_info();
 
         let mut launch_env: HashMap<String, String> = HashMap::new();
@@ -134,6 +143,7 @@ impl super::DebugSession {
             }
         };
 
+        info!("debuggee_terminal is_none={}", self.debuggee_terminal.is_none());
         let result = match &self.debuggee_terminal {
             Some(t) => {
                 // Windows does not have an API for launching child process in a different console than the parent
@@ -143,7 +153,7 @@ impl super::DebugSession {
                 let result = do_launch();
                 #[cfg(windows)]
                 t.detach_console();
-                drop(t);
+                let _ = t;
                 result
             }
             None => do_launch(),
@@ -152,6 +162,7 @@ impl super::DebugSession {
         let process = match result {
             Ok(process) => process,
             Err(err) => {
+                error!("do_launch error: {:?} is_none={}", err, launch_info.working_directory().is_none());
                 let mut msg = err.to_string();
                 if let Some(work_dir) = launch_info.working_directory() {
                     if self.target.platform().get_file_permissions(work_dir) == 0 {
@@ -357,10 +368,13 @@ impl super::DebugSession {
             self_ref
                 .map(|s| match result {
                     Ok(terminal) => s.debuggee_terminal = Some(terminal),
-                    Err(err) => s.console_error(format!(
-                        "Failed to redirect stdio to a terminal. ({})\nDebuggee output will appear here.",
-                        err
-                    )),
+                    Err(err) => {
+                        error!("Terminal::create fail: {:?}", err);
+                        s.console_error(format!(
+                            "Failed to redirect stdio to a terminal. ({})\nDebuggee output will appear here.",
+                            err
+                        ))
+                    },
                 })
                 .await
         }

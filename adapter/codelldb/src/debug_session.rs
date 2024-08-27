@@ -542,6 +542,7 @@ impl DebugSession {
     }
 
     fn console_message_impl(&self, category: Option<&str>, output: impl std::fmt::Display) {
+        debug!("console_message_impl {}", output);
         self.send_event(EventBody::output(OutputEventBody {
             output: format!("{}\n", output),
             category: category.map(Into::into),
@@ -1481,7 +1482,7 @@ impl DebugSession {
     }
 
     fn handle_debug_event(&mut self, event: SBEvent) {
-        debug!("Debug event: {:?}", event);
+        // debug!("Debug event: {:?}", event);
         if let Some(process_event) = event.as_process_event() {
             self.handle_process_event(&process_event);
         } else if let Some(target_event) = event.as_target_event() {
@@ -1530,9 +1531,11 @@ impl DebugSession {
             let mut buffer = [0; 1024];
             let mut read = read_stream(&mut buffer);
             while read > 0 {
+                let output =String::from_utf8_lossy(&buffer[..read]).into_owned();
+                debug!("handle_process_event {}", output);
                 self.send_event(EventBody::output(OutputEventBody {
                     category: Some(category.to_owned()),
-                    output: String::from_utf8_lossy(&buffer[..read]).into_owned(),
+                    output,
                     ..Default::default()
                 }));
                 read = read_stream(&mut buffer);
