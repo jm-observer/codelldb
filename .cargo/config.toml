@@ -1,0 +1,14 @@
+[env]
+CC_x86_64-pc-windows-msvc = "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.35.32215/bin/Hostx64/x64/cl.exe"
+CXX_x86_64-pc-windows-msvc = "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.35.32215/bin/Hostx64/x64/cl.exe"
+CFLAGS_x86_64-pc-windows-msvc = "/DWIN32 /D_WINDOWS /W3"
+CXXFLAGS_x86_64-pc-windows-msvc = "/DWIN32 /D_WINDOWS /W3 /GR /EHsc"
+
+INCLUDE="C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.35.32215/include;C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.35.32215/ATLMFC/include;C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Auxiliary/VS/include;C:/Program Files (x86)/Windows Kits/10/include/10.0.22000.0/ucrt;C:/Program Files (x86)/Windows Kits/10//include/10.0.22000.0//um;C:/Program Files (x86)/Windows Kits/10//include/10.0.22000.0//shared;C:/Program Files (x86)/Windows Kits/10//include/10.0.22000.0//winrt;C:/Program Files (x86)/Windows Kits/10//include/10.0.22000.0//cppwinrt;C:/Program Files (x86)/Windows Kits/NETFXSDK/4.8/include/um"
+
+LLDB_INCLUDE = "D:/git/codelldb/build/lldb/include"
+#LLDB_LINK_LIB = "liblldb"
+#LLDB_LINK_SEARCH = "D:/git/codelldb/build/lldb/lib"
+#LLDB_DYLIB_SEARCH = "D:/git/codelldb/build/lldb/bin"
+#LLDB_DYLIB = "D:/git/codelldb/build/lldb/bin/liblldb.dll"
+#ADAPTER_SOURCE_DIR = "D:/git/codelldb/adapter"

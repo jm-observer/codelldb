@@ -1,6 +1,8 @@
 /.vscode/
-/build*/
 /target/
 *.pyc
 .idea
 Cargo.lock
+build/lldb.zip
+build/lldb/bin-s
+build/lldb/lib-s
