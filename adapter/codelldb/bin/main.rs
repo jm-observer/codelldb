@@ -1,11 +1,16 @@
 use clap::{App, Arg, SubCommand};
+use log::{error, info, LevelFilter::Debug};
+use log::LevelFilter::Info;
 
 type Error = Box<dyn std::error::Error>;
 
 mod terminal_agent;
 
 fn main() -> Result<(), Error> {
-    env_logger::Builder::from_default_env().init();
+    // env_logger::Builder::from_default_env().init();
+    let _ = custom_utils::logger::logger_feature_with_path("codelldb-lapce", Info, Info, "C:\\Users\\36225\\etc".into(), true, "C:\\Users\\36225\\log".into()).build();
+
+
 
     let matches = App::new("codelldb")
         .arg(Arg::with_name("preload").long("preload").multiple(true).takes_value(true))
@@ -20,9 +25,14 @@ fn main() -> Result<(), Error> {
         )
         .get_matches();
 
+    info!("lldb.exe run: {matches:?}");
+
     if let Some(matches) = matches.subcommand_matches("terminal-agent") {
+        let _ = custom_utils::logger::logger_feature_with_path("terminal-agent", Info, Info, "C:\\Users\\36225\\etc".into(), true, "C:\\Users\\36225\\log".into()).build();
         terminal_agent::terminal_agent(&matches)
     } else {
+        let _ = custom_utils::logger::logger_feature_with_path("codelldb-lapce", Info, Info, "C:\\Users\\36225\\etc".into(), true, "C:\\Users\\36225\\log".into()).build();
+
         #[cfg(feature = "weaklink")]
         {
             use std::path::PathBuf;

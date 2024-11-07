@@ -81,7 +81,7 @@ impl codec::Decoder for DAPCodec {
                         self.state = State::ReadingHeaders;
                         self.content_len = 0;
 
-                        debug!("--> {}", str::from_utf8(&message_bytes).unwrap());
+                        info!("receive from client: {}", str::from_utf8(&message_bytes).unwrap());
                         match serde_json::from_slice(&message_bytes) {
                             Ok(message) => return Ok(Some(Ok(message))),
                             Err(err) => {
@@ -107,7 +107,7 @@ impl codec::Encoder<ProtocolMessage> for DAPCodec {
 
     fn encode(&mut self, message: ProtocolMessage, buffer: &mut BytesMut) -> Result<(), Self::Error> {
         let message_bytes = serde_json::to_vec(&message).unwrap();
-        debug!("<-- {}", str::from_utf8(&message_bytes).unwrap());
+        info!("response to client: {}", str::from_utf8(&message_bytes).unwrap());
 
         buffer.reserve(32 + message_bytes.len());
         write!(buffer, "Content-Length: {}\r\n\r\n", message_bytes.len()).unwrap();
