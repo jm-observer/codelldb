@@ -8,7 +8,7 @@ mod terminal_agent;
 
 fn main() -> Result<(), Error> {
     // env_logger::Builder::from_default_env().init();
-    let _ = custom_utils::logger::logger_feature_with_path("codelldb-lapce", Info, Info, "C:\\Users\\36225\\etc".into(), true, "C:\\Users\\36225\\log".into()).build();
+    // let _ = custom_utils::logger::logger_feature_with_path("codelldb-lapce", Info, Info, "C:\\Users\\36225\\etc".into(), true, "C:\\Users\\36225\\log".into()).build();
 
 
 
@@ -25,14 +25,15 @@ fn main() -> Result<(), Error> {
         )
         .get_matches();
 
-    info!("lldb.exe run: {matches:?}");
+
 
     if let Some(matches) = matches.subcommand_matches("terminal-agent") {
         let _ = custom_utils::logger::logger_feature_with_path("terminal-agent", Info, Info, "C:\\Users\\36225\\etc".into(), true, "C:\\Users\\36225\\log".into()).build();
+        info!("terminal-agent run: {matches:?}");
         terminal_agent::terminal_agent(&matches)
     } else {
         let _ = custom_utils::logger::logger_feature_with_path("codelldb-lapce", Info, Info, "C:\\Users\\36225\\etc".into(), true, "C:\\Users\\36225\\log".into()).build();
-
+        info!("lldb.exe run: {matches:?}");
         #[cfg(feature = "weaklink")]
         {
             use std::path::PathBuf;
